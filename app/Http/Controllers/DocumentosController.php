@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Documentos;
 use App\Http\Requests\StoreDocumentosRequest;
 use App\Http\Requests\UpdateDocumentosRequest;
+use App\Models\Asignacion;
 use App\Models\Espacios;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -29,6 +30,7 @@ class DocumentosController extends Controller
         $this->source = 'Documentos/';
         $this->model = new Documentos();
         $this->modelo = new Espacios();
+        $this->modelAsignacion = new Asignacion();
         $this->routeName = 'documentos.';
     }
     /**
@@ -41,6 +43,7 @@ class DocumentosController extends Controller
         return Inertia::render("{$this->source}Index", [
             'espacios'        =>  $this->modelo::paginate(100),
             'documentos'        =>  $this->model::paginate(100),
+            'asig'        =>  $this->modelAsignacion::paginate(100),
             'titulo'          => 'Gestion de documentos estudiante',
             'routeName'      => $this->routeName
         ]);
@@ -121,7 +124,6 @@ class DocumentosController extends Controller
      */
     public function update(UpdateDocumentosRequest $request, Documentos $documentos)
     {
-        
     }
 
     /**
@@ -145,5 +147,16 @@ class DocumentosController extends Controller
             'routeName'      => $this->routeName,
             'nombre_doc' => $name,
         ]);
+    }
+
+    public function downloadFile($name){
+        if (Storage::disk($this->disk)->exists('DocumentosEstudiantes/'.$name)){
+            $path = 'storage/DocumentosEstudiantes/'.$name;
+            return response()->download($path);
+        }elseif(Storage::disk($this->disk)->exists('DocumentosEstudiantes/'.$name.'.pdf')){
+            $path = 'storage/DocumentosEstudiantes/'.$name.'.pdf';
+            return response()->download($path);
+        }
+        return 'documento no encontrado';
     }
 }

@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('documentos', function (Blueprint $table) {
+        Schema::create('asignacions', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre_documento');
-            $table->string('URL_documento');
-            $table->string('estatus');
-            $table->longText('comentarios')->nullable();
+            $table->integer('id_maestro');
             $table->integer('id_estudiante');
             $table->timestamps();
         });
@@ -31,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('documentos');
+        Schema::dropIfExists('asignacions');
     }
 };

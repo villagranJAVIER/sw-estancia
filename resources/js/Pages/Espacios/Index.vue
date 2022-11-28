@@ -1,14 +1,13 @@
 <template>
-    <app-layout title="Gestion de espacios">
-      <template #header>
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-          {{ titulo }}
-        </h2>
-      </template>
-      <div class="py-12">
-          <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 text-right">
-            <Link
-                  class="
+  <app-layout title="Gestion de espacios">
+    <template #header>
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        {{ titulo }}
+      </h2>
+    </template>
+    <div class="py-12">
+      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 text-right">
+        <Link class="
                       p-3
                       border-2
                       border-blue-500
@@ -17,81 +16,84 @@
                       hover:bg-blue-200
                       font-bold
                       rounded-xl
-                  "
-                  :href="route(`${routeName}create`)"
-              >
-                  + Agregar nuevo
-            </Link>
-  
-            <table v-if="espacios.data.length > 0" class="w-full text-left mt-10">
-                <thead
-                    class="border-b-2 border-gray-300 text-indigo-600"
-                >
-                    <tr>
-                        <th class="px-6 py-3 text-left">
-                            Nombre documento
-                        </th>
-                        <th class="px-6 py-3 text-left">
-                            Nombre plantilla
-                        </th>
-                        <th class="px-6 py-3 text-left">
-                            URL
-                        </th>
-                        <th class="px-6 py-3 text-left">
-                            Acciones
-                        </th>
-                    </tr>
-                </thead>
-                <tbody v-for="item in espacios.data">
-                    <tr
-                        class="text-sm text-indigo-900 border-b border-gray-400"
-                    >
-                        <td class="px-6 py-4">
-                          <Link :href="route('espacios.edit', item.id)" class="no-underline text-black hover:font-bold">
-                            {{ item.nombre_documento }}
-                          </Link>
-                        </td>
-                        
-                        <td class="px-6 py-4">
-                          <Link :href="route('espacios.edit', item.id)" class="no-underline text-black hover:font-bold">
-                            {{ item.nombre_plantilla }}
-                          </Link>
-                          
-                        </td>
+                  " :href="route(`${routeName}create`)">
+        + Agregar nuevo
+        </Link>
 
-                        <td class="px-6 py-4">
-                          <a
-                            target='_blank' rel="noopener noreferrer"
-                            :href = "route('download', item.URL_plantilla)" 
-                            class="no-underline text-black hover:font-bold">
-                            Storage/app/public/Formatos/{{ item.URL_plantilla }}
-                          </a>
+        <table v-if="espacios.data.length > 0" class="w-full text-left mt-10">
+          <thead class="border-b-2 border-gray-300 text-indigo-600">
+            <tr>
+              <th class="px-6 py-3 text-left">
+                Nombre documento
+              </th>
+              <th class="px-6 py-3 text-left">
+                Nombre plantilla
+              </th>
+              <th class="px-6 py-3 text-left">
+                URL
+              </th>
+              <th class="px-6 py-3 text-left">
+                Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody v-for="item in espacios.data">
+            <tr class="text-sm text-indigo-900 border-b border-gray-400">
+              <td class="px-6 py-4">
+                <Link :href="route('espacios.edit', item.id)" class="no-underline text-black hover:font-bold">
+                {{ item.nombre_documento }}
+                </Link>
+              </td>
 
-                        </td>
-                        <td class="px-6 py-4">
-                          <Link
-                            :href="route('espacios.edit', item.id)"
-                            class="text-blue-500 hover:text-blue-600"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-play" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                              <path d="M7 4v16l13 -8z" />
-                            </svg>
-                          </Link>
-                          
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div v-else class="bg-red-100 border border-red-400 p-3 rounded-lg text-red-800 mt-5 text-left">
-                No hay ningun registro
-            </div>
-  
-          </div>
+              <td class="px-6 py-4">
+                <Link :href="route('espacios.edit', item.id)" class="no-underline text-black hover:font-bold"
+                  v-if="item.URL_plantilla != 'Vacio'">
+                {{ item.nombre_plantilla }}
+                </Link>
+
+              </td>
+
+              <td class="px-6 py-4">
+                <a v-if="item.URL_plantilla != 'Vacio'" target='_blank' rel="noopener noreferrer"
+                  :href="route('download', item.URL_plantilla)"
+                  class="no-underline text-black hover:font-bold flex items-center">
+                  Storage/app/public/Formatos/{{ item.URL_plantilla }}
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-text" width="44"
+                    height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                    <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                    <line x1="9" y1="9" x2="10" y2="9" />
+                    <line x1="9" y1="13" x2="15" y2="13" />
+                    <line x1="9" y1="17" x2="15" y2="17" />
+                  </svg>
+                </a>
+
+              </td>
+              <td class="px-6 py-4">
+                <Link :href="route('espacios.edit', item.id)" class="text-blue-500 hover:text-blue-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-play" width="44"
+                  height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 4v16l13 -8z" />
+                </svg>
+                </Link>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div v-else class="bg-red-100 border border-red-400 p-3 rounded-lg text-red-800 mt-5 text-left">
+          No hay ningun registro
+        </div>
+
       </div>
+    </div>
 
-      <!-- <img src="storage/Formatos/logo.png" alt="">  -->
-    </app-layout>
+    <!-- <img src="storage/Formatos/logo.png" alt="">  -->
+  </app-layout>
 </template>
 
 <script>

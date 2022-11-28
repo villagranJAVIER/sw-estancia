@@ -13,7 +13,7 @@ class StoreRecursosRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,13 @@ class StoreRecursosRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'URL_documento' => ['required','mimes:pdf,docx,doc'],
+        ];
+    }
+    public function attributes(): array
+    {
+        return [
+            'URL_documento' => 'Archivo',
         ];
     }
 }

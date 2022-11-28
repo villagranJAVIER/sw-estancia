@@ -1,5 +1,5 @@
 <template>
-    <app-layout title="Universidades">
+    <app-layout title="Agregar usuario">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ titulo }}

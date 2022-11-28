@@ -69,8 +69,17 @@
                           </Link>
                         </td>
                         <td class="px-6 py-4">
-                          <Link :href="route('usuarios.edit', item.id)" class="no-underline text-black hover:font-bold">
-                            {{ item.tipo }}
+                          <Link :href="route('usuarios.edit', item.id)" class="no-underline text-black hover:font-bold" v-if="item.tipo==1">
+                            Administrador
+                          </Link>
+                          <Link :href="route('usuarios.edit', item.id)" class="no-underline text-black hover:font-bold" v-if="item.tipo==2">
+                            Asistente
+                          </Link>
+                          <Link :href="route('usuarios.edit', item.id)" class="no-underline text-black hover:font-bold" v-if="item.tipo==3">
+                            Maestro
+                          </Link>
+                          <Link :href="route('usuarios.edit', item.id)" class="no-underline text-black hover:font-bold" v-if="item.tipo==4">
+                            Estudiante
                           </Link>
                         </td>
                         <td class="px-6 py-4">

@@ -8,7 +8,7 @@ import JetButton from '@/Components/Button.vue';
     <app-layout title="Home">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Menu principal
+                Menú principal
             </h2>
         </template>
 
@@ -54,9 +54,9 @@ import JetButton from '@/Components/Button.vue';
                                 border-b
                                 border-gray-400
                             "
-                            
+                            :href="route('estudiantes.index')"
                             >
-                                Consultar Estudiante nojala
+                                Consultar Estudiante
                             </Link>
                         </li>
                         <li class="ml-2 flex flex-row items-center">

@@ -2,27 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Fortify\UpdateUserProfileInformation;
-use App\Http\Requests\StoreusuarioRequest;
-use App\Http\Requests\UpdateusuarioRequest;
+use App\Models\Asignacion;
+use App\Models\Documentos;
 use App\Models\Universidades;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 
-class UsuarioController extends Controller
+class EstudianteController extends Controller
 {
     protected string $routeName;
     protected string $source;
-    protected string $module = 'usuarios';
+    protected string $module = 'estudiantes';
     protected User $model;
 
     public function __construct()
     {
         $this->middleware('auth');
-        $this->routeName = "usuarios.";
-        $this->source    = "Usuarios/";
+        $this->routeName = "estudiantes.";
+        $this->source    = "Estudiantes/";
         $this->model     = new User();
         $this->modelU     = new Universidades();
     }
@@ -33,10 +31,11 @@ class UsuarioController extends Controller
      */
     public function index()
     {
-        
+        //$usuarios = User::with('id_universidad')->get();
+
         return Inertia::render("{$this->source}Index", [
             'usuarios'  =>  $this->model::paginate(100),
-            'titulo'          => 'Gestion de usuarios',
+            'titulo'          => 'Consulta estudiantes',
             'routeName'      => $this->routeName
         ]);
     }
@@ -48,11 +47,7 @@ class UsuarioController extends Controller
      */
     public function create()
     {
-        return Inertia::render("{$this->source}Create", [
-            'titulo'          => 'Agregar Usuario',
-            'universidades'  =>  $this->modelU::paginate(100),
-            'routeName'      => $this->routeName
-        ]);
+        //
     }
 
     /**
@@ -61,12 +56,9 @@ class UsuarioController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreusuarioRequest $request)
+    public function store(Request $request)
     {
-        $fields = $request->validated();
-        $fields['password'] = Hash::make($fields['password']);
-        User::create($fields);
-        return redirect()->route('usuarios.index');
+        //
     }
 
     /**
@@ -77,7 +69,21 @@ class UsuarioController extends Controller
      */
     public function show($id)
     {
-        abort(405);
+        $estudiante = User::find($id);        
+        $universidad = Universidades::find($estudiante->id_universidad);
+
+        $documento = Documentos::where('id_estudiante', $estudiante->id)->paginate(100);
+        $asignacion = Asignacion::where('id_estudiante', $estudiante->id)->paginate(100);
+        
+        return Inertia::render("{$this->source}Consulta", [
+            'titulo'          => 'Consulta estudiante',
+            'routeName'      => $this->routeName,
+            'estudiantes' => $estudiante,
+            'uni'  =>  $universidad,
+            'doc' => $documento,
+            'asig' => $asignacion,
+            
+        ]);
     }
 
     /**
@@ -88,13 +94,11 @@ class UsuarioController extends Controller
      */
     public function edit($id)
     {
-        $user = User::find($id);
+        $documento = Documentos::find($id);  
         return Inertia::render("{$this->source}Edit", [
-            'titulo'          => 'Editar usuario',
+            'titulo'          => 'Consulta estudiante',
             'routeName'      => $this->routeName,
-            'usuarios' => $user,
-            'universidades'  =>  $this->modelU::paginate(100),
-
+            'doc' => $documento,
         ]);
     }
 
@@ -105,15 +109,13 @@ class UsuarioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateusuarioRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $user = User::find($id);
-        //dd($request);
-        $user->update($request->all());
+        $documento = Documentos::find($id);  
+        $documento->update($request->all());
         
-        return redirect()->route('usuarios.index');
+        return redirect()->route('estudiantes.show',$documento->id_estudiante);
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -123,8 +125,6 @@ class UsuarioController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::find($id);
-        $user->delete();
-        return redirect()->route('usuarios.index');
+        //
     }
 }

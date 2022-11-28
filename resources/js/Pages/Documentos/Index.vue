@@ -32,8 +32,19 @@
                 </td>
                 <td class="px-6 py-4">
                   <a target='_blank' rel="noopener noreferrer" :href="route('download', item.URL_plantilla)"
-                    class="no-underline text-black hover:font-bold">
+                    class="no-underline text-black hover:font-bold flex items-center"
+                    v-if="item.URL_plantilla != 'Vacio'">
                     {{ item.nombre_plantilla }}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-text" width="44"
+                      height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                      <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                      <line x1="9" y1="9" x2="10" y2="9" />
+                      <line x1="9" y1="13" x2="15" y2="13" />
+                      <line x1="9" y1="17" x2="15" y2="17" />
+                    </svg>
                   </a>
 
                 </td>
@@ -93,8 +104,8 @@
                   {{ item.nombre_documento }}
                 </td>
                 <td class="px-6 py-4">
-                  <a target='_blank' rel="noopener noreferrer" :href="route('download', item.URL_documento)"
-                    class="no-underline text-black hover:font-bold">
+                  <a target='_blank' rel="noopener noreferrer" :href="route('downloadDoc', item.URL_documento)"
+                    class="no-underline text-black hover:font-bold flex items-center">
                     {{ item.URL_documento }}
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-text" width="44"
                       height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none"
@@ -138,6 +149,71 @@
           </table>
         </div>
 
+        <div class="bg-slate-200 p-10 border-2 border-blue-300 rounded-xl mt-12 mb-14">
+          <h2 class="font-semibold text-xl text-gray-800 leading-tight text-left">
+            Asignacion
+          </h2>
+          <table class="w-full text-left mt-10">
+            <thead class="border-b-2 border-gray-300 text-indigo-600">
+              <tr>
+                <th class="px-6 py-3 text-left">
+                  Estudiante
+                </th>
+                <th class="px-6 py-3 text-left">
+                  Maestro
+                </th>
+
+              </tr>
+            </thead>
+            <tbody v-for="item in asig.data" :key="item.id">
+              <tr v-if="item.id_estudiante == $page.props.user.id"
+                class="text-sm text-indigo-900 border-b border-gray-400">
+                <td class="px-6 py-4">
+                  a
+                </td>
+                <td class="px-6 py-4">
+                  {{ item.id_maestro }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="bg-slate-200 p-10 border-2 border-blue-300 rounded-xl">
+          <h2 class="font-semibold text-xl text-gray-800 leading-tight text-left">
+            Recursos
+          </h2>
+          <ul class="p-3">
+            <li class="ml-2 flex flex-row items-center">
+              <div class="bg-gray-500 mr-3 h-2 w-2"></div>
+              <Link class="
+                                hover:text-gray-800
+                                mt-2
+                                text-sm
+                                text-indigo-500
+                                border-b
+                                border-gray-400
+                            " :href="route('estudiantes.index')">
+              Carta liberacion
+              </Link>
+            </li>
+
+            <li class="ml-2 flex flex-row items-center">
+              <div class="bg-gray-500 mr-3 h-2 w-2"></div>
+              <Link class="
+                                hover:text-gray-800
+                                mt-2
+                                text-sm
+                                text-indigo-500
+                                border-b
+                                border-gray-400
+                            " :href="route('estudiantes.index')">
+              Carta liberacion
+              </Link>
+            </li>
+
+          </ul>
+        </div>
       </div>
     </div>
 
@@ -161,6 +237,12 @@ export default {
     },
 
     documentos: {
+      type: Object,
+      default: {},
+      required: true,
+    },
+
+    asig: {
       type: Object,
       default: {},
       required: true,
