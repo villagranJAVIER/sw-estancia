@@ -7,6 +7,7 @@ use App\Http\Requests\StoreDocumentosRequest;
 use App\Http\Requests\UpdateDocumentosRequest;
 use App\Models\Asignacion;
 use App\Models\Espacios;
+use App\Models\Recursos;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,6 +32,7 @@ class DocumentosController extends Controller
         $this->model = new Documentos();
         $this->modelo = new Espacios();
         $this->modelAsignacion = new Asignacion();
+        $this->modelRecursos = new Recursos();
         $this->routeName = 'documentos.';
     }
     /**
@@ -44,6 +46,7 @@ class DocumentosController extends Controller
             'espacios'        =>  $this->modelo::paginate(100),
             'documentos'        =>  $this->model::paginate(100),
             'asig'        =>  $this->modelAsignacion::paginate(100),
+            'recursos' => $this->modelRecursos::paginate(100),
             'titulo'          => 'Gestion de documentos estudiante',
             'routeName'      => $this->routeName
         ]);

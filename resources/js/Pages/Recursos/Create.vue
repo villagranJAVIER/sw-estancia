@@ -18,7 +18,7 @@
                             :class="{ 'is-invalid': form.errors.nombre_documento }" required placeholder="Nombre documento" />
                         <jet-input-error :message="form.errors.nombre_documento" />
 
-
+                    
                         <div class="w-96 mt-7 text-center">
                             <jet-label for="campo4" value="Selecciona un archivo:" />
                             <jet-input

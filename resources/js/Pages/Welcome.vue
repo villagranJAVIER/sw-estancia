@@ -21,7 +21,9 @@ defineProps({
          dark:bg-gray-900
     ">
         <div>
-            <JetApplicationMark class="h-12 w-auto"></JetApplicationMark>
+            <div class="shrink-0 flex items-center">
+                <img src="storage/images/logo.png" alt="" width="120">
+            </div>
         </div>
         <div v-if="canLogin">
             <Link v-if="$page.props.user" :href="route('dashboard')" class="text-sm underline hover:text-gray-400">

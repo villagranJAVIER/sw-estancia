@@ -6,6 +6,7 @@ use App\Http\Controllers\DocumentosController;
 use App\Http\Controllers\EspaciosController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\RecursosController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TemplateFormatsController;
 use App\Http\Controllers\UniversidadesController;
 use App\Http\Controllers\UsuarioController;
@@ -66,16 +67,18 @@ Route::middleware([
     Route::group(['middleware' => 'estudiante'], function () {
         Route::resource('documentos', DocumentosController::class)->parameters(['documentos' => 'documentos']);
         Route::get('documentos/create/{id}', [DocumentosController::class, 'subir'])->name('subir');
+        Route::get('recursos/downloadDoc/{URL}', [RecursosController::class, 'downloadFile'])->name('downloadRecurso');
+
     });
 
     Route::group(['middleware' => 'asistente'], function () {
         Route::resource('estudiantes', EstudianteController::class)->parameters(['estudiantes' => 'estudiantes']);
         Route::get('documentos/downloadDoc/{URL}', [DocumentosController::class, 'downloadFile'])->name('downloadDoc');
         Route::resource('asignaciones', AsignacionController::class)->parameters(['asignaciones' => 'asignaciones']);
-
         Route::resource('recursos', RecursosController::class)->parameters(['recursos' => 'recursos']);
-
         Route::get('recursos/create/{id}', [RecursosController::class, 'subir'])->name('subirDoc');
+
+        Route::get('estudiantes/pdf', [ReportController::class, 'generar'])->name('generar');
     });
     
 });

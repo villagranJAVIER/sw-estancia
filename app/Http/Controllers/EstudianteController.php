@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Asignacion;
 use App\Models\Documentos;
+use App\Models\Recursos;
 use App\Models\Universidades;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
+use Illuminate\Http\RedirectResponse;
+
+
 
 class EstudianteController extends Controller
 {
@@ -23,20 +28,32 @@ class EstudianteController extends Controller
         $this->source    = "Estudiantes/";
         $this->model     = new User();
         $this->modelU     = new Universidades();
+        $this->modelR     = new Recursos();
     }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request): Response
     {
-        //$usuarios = User::with('id_universidad')->get();
+        $request->status = $request->status === null ? true : $request->status;
+        $records = $request->status == '0' ? $this->model->onlyTrashed() : $this->model;
+        $records = $records->when($request->search, function ($query, $search) {
+            if ($search != '') {
+                $query->where('nombre', 'LIKE', '%' . $search . '%')
+                    ->orWhere('descripcion', 'LIKE', '%' . $search . '%');
+            }
+        });
 
         return Inertia::render("{$this->source}Index", [
             'usuarios'  =>  $this->model::paginate(100),
             'titulo'          => 'Consulta estudiantes',
-            'routeName'      => $this->routeName
+            'routeName'      => $this->routeName,
+            
+            'loadingResults' => false,
+            'search'         => $request->search ?? '',
+            'status'         => (bool) $request->status,
         ]);
     }
 
@@ -75,6 +92,7 @@ class EstudianteController extends Controller
         $documento = Documentos::where('id_estudiante', $estudiante->id)->paginate(100);
         $asignacion = Asignacion::where('id_estudiante', $estudiante->id)->paginate(100);
         
+        
         return Inertia::render("{$this->source}Consulta", [
             'titulo'          => 'Consulta estudiante',
             'routeName'      => $this->routeName,
@@ -82,6 +100,8 @@ class EstudianteController extends Controller
             'uni'  =>  $universidad,
             'doc' => $documento,
             'asig' => $asignacion,
+            'recursos' => $this->modelR->paginate(100),
+
             
         ]);
     }

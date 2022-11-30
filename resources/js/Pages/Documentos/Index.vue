@@ -169,7 +169,7 @@
               <tr v-if="item.id_estudiante == $page.props.user.id"
                 class="text-sm text-indigo-900 border-b border-gray-400">
                 <td class="px-6 py-4">
-                  a
+                  {{$page.props.user.name}}
                 </td>
                 <td class="px-6 py-4">
                   {{ item.id_maestro }}
@@ -183,36 +183,48 @@
           <h2 class="font-semibold text-xl text-gray-800 leading-tight text-left">
             Recursos
           </h2>
-          <ul class="p-3">
-            <li class="ml-2 flex flex-row items-center">
-              <div class="bg-gray-500 mr-3 h-2 w-2"></div>
-              <Link class="
-                                hover:text-gray-800
-                                mt-2
-                                text-sm
-                                text-indigo-500
-                                border-b
-                                border-gray-400
-                            " :href="route('estudiantes.index')">
-              Carta liberacion
-              </Link>
-            </li>
-
-            <li class="ml-2 flex flex-row items-center">
-              <div class="bg-gray-500 mr-3 h-2 w-2"></div>
-              <Link class="
-                                hover:text-gray-800
-                                mt-2
-                                text-sm
-                                text-indigo-500
-                                border-b
-                                border-gray-400
-                            " :href="route('estudiantes.index')">
-              Carta liberacion
-              </Link>
-            </li>
-
-          </ul>
+          <table class="w-full text-left mt-10">
+            <thead class="border-b-2 border-gray-300 text-indigo-600">
+              <tr>
+                <th class="px-6 py-3 text-left">
+                  Nombre
+                </th>
+                <th class="px-6 py-3 text-left">
+                  URL
+                </th>
+                <th class="px-6 py-3 text-left">
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody v-for="item in recursos.data" :key="item.id">
+              <tr v-if="item.id_estudiante == $page.props.user.id"
+                class="text-sm text-indigo-900 border-b border-gray-400">
+                <td class="px-6 py-4">
+                  {{item.nombre_documento}}
+                </td>
+                <td class="px-6 py-4">
+                  {{ item.URL_documento }}
+                </td>
+                <td>
+                  <a 
+                    target='_blank' rel="noopener noreferrer"
+                    class="
+                          p-1.5
+                          border-2
+                          border-blue-500
+                          text-blue-500
+                          bg-blue-100
+                          hover:bg-blue-200
+                          font-bold
+                          rounded-xl"
+                          :href="route('downloadRecurso', item.URL_documento)">
+                    Descargar
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -243,6 +255,12 @@ export default {
     },
 
     asig: {
+      type: Object,
+      default: {},
+      required: true,
+    },
+
+    recursos: {
       type: Object,
       default: {},
       required: true,

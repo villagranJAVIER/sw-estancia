@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Recursos;
 use App\Http\Requests\StoreRecursosRequest;
 use App\Http\Requests\UpdateRecursosRequest;
+use App\Models\Asignacion;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class RecursosController extends Controller
@@ -54,22 +56,16 @@ class RecursosController extends Controller
     public function store(StoreRecursosRequest $request)
     {
         $file = $request->file('URL_documento');
+        $id = $request->input('id_estudiante');
         $nombre = $request->input('nombre_documento') . $id . "." . $file->guessExtension();
-        if (!Storage::disk($this->disk)->exists('DocumentosEstudiantes/'.$nombre)){
-            //return 'existe';
-            Documentos::create([
-                'nombre_documento' => $request->input('nombre_documento'),
-                'URL_documento' => $nombre,
-                'estatus' => $request->input('estatus'),
-                'comentarios' => $request->input('comentarios'),
-                'id_estudiante' => $id,
-                $file->storeAs('public/DocumentosEstudiantes', $nombre)
-            ]);
-        }else{
-            return 'Este documento ya fue subido';
-        }
+        Recursos::create([
+            'nombre_documento' => $request->input('nombre_documento'),
+            'URL_documento' => $nombre,
+            'id_estudiante' => $id,
+            $file->storeAs('public/Recursos', $nombre)
+        ]);
 
-        return redirect()->route("documentos.index");
+        return redirect()->route("estudiantes.show",$id);
     }
 
     /**
@@ -89,9 +85,14 @@ class RecursosController extends Controller
      * @param  \App\Models\Recursos  $recursos
      * @return \Illuminate\Http\Response
      */
-    public function edit(Recursos $recursos)
+    public function edit($id)
     {
-        //
+        $recurso = Recursos::find($id);  
+        return Inertia::render("{$this->source}Edit", [
+            'titulo'          => 'Consulta estudiante',
+            'routeName'      => $this->routeName,
+            'recursos' => $recurso,
+        ]);
     }
 
     /**
@@ -112,17 +113,25 @@ class RecursosController extends Controller
      * @param  \App\Models\Recursos  $recursos
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Recursos $recursos)
+    public function destroy($id)
     {
-        
+        $recurso = Recursos::find($id); 
+        $id = $recurso->id_estudiante;
+        $recurso->delete();
+        return redirect()->route("estudiantes.show",$id);
     }
 
-    public function subir($name)
+    public function subir($id)
     {
         return Inertia::render("{$this->source}Create", [
             'titulo'          => 'Agregar documento',
             'routeName'      => $this->routeName,
-            'estudiante' => $name,
+            'estudiante' => $id,
         ]);
+    }
+    //downloadRecurso
+    public function downloadFile($name){
+        $path = 'storage/Recursos/'.$name;
+        return response()->download($path);
     }
 }
